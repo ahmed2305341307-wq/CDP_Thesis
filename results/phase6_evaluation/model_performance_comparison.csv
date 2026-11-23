@@ -1,0 +1,5 @@
+Model,Accuracy,Precision,Recall,F1_Score,ROC_AUC
+Tuned Voting Ensemble,1.0,1.0,1.0,1.0,1.0
+Tuned XGBoost,1.0,1.0,1.0,1.0,1.0
+Tuned Random Forest,0.9875,0.9803921568627451,1.0,0.9900990099009901,1.0
+Tuned SVM,0.9875,1.0,0.98,0.98989898989899,1.0

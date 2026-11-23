@@ -1,0 +1,25 @@
+{
+    "Random Forest": {
+        "n_estimators": 100,
+        "min_samples_split": 5,
+        "min_samples_leaf": 2,
+        "max_features": "log2",
+        "max_depth": 20,
+        "class_weight": null
+    },
+    "SVM": {
+        "kernel": "rbf",
+        "gamma": "scale",
+        "class_weight": "balanced",
+        "C": 1
+    },
+    "XGBoost": {
+        "subsample": 1.0,
+        "reg_lambda": 5,
+        "n_estimators": 100,
+        "min_child_weight": 1,
+        "max_depth": 3,
+        "learning_rate": 0.1,
+        "colsample_bytree": 0.8
+    }
+}

@@ -1,0 +1,16 @@
+Feature,Mean_Absolute_SHAP_Value
+hemo,1.50231
+sg,1.1449188
+sc,0.9937426
+al,0.590845
+pcv,0.32314295
+htn_no,0.266905
+bgr,0.24192849
+rc,0.23886454
+dm_no,0.07816721
+dm_yes,0.01059114
+bp,0.0007745663
+htn_yes,0.0
+appet_good,0.0
+appet_poor,0.0
+pe_yes,0.0
