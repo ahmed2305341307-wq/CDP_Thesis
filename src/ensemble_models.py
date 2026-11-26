@@ -4,7 +4,8 @@ import joblib
 import pandas as pd
 import matplotlib.pyplot as plt
 
-from sklearn.ensemble import RandomForestClassifier, VotingClassifier
+from sklearn.ensemble import RandomForestClassifier
+from stacking_architecture import (build_hierarchical_stacking, build_single_stacking, build_soft_voting)
 from sklearn.svm import SVC
 from sklearn.metrics import (
     accuracy_score,
@@ -91,20 +92,17 @@ def create_models():
         n_jobs=-1
     )
 
-    voting_ensemble = VotingClassifier(
-        estimators=[
-            ("rf", random_forest),
-            ("svm", svm),
-            ("xgb", xgboost)
-        ],
-        voting="soft"
+    hierarchical_stacking = build_hierarchical_stacking(
+        random_forest, svm, xgboost, random_state=RANDOM_STATE
     )
 
     return {
         "Random Forest": random_forest,
         "SVM": svm,
         "XGBoost": xgboost,
-        "Voting Ensemble": voting_ensemble
+        "Soft Voting Baseline": build_soft_voting(random_forest, svm, xgboost),
+        "Single-Level Stacking": build_single_stacking(random_forest, svm, xgboost, random_state=RANDOM_STATE),
+        "Hierarchical Stacking": hierarchical_stacking
     }
 
 

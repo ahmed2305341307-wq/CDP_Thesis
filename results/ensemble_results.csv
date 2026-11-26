@@ -2,4 +2,6 @@ Model,Accuracy,Precision,Recall,F1-Score,ROC-AUC
 Random Forest,1.0,1.0,1.0,1.0,1.0
 SVM,0.9875,1.0,0.98,0.98989898989899,1.0
 XGBoost,0.9875,0.9803921568627451,1.0,0.9900990099009901,1.0
-Voting Ensemble,1.0,1.0,1.0,1.0,1.0
+Soft Voting Baseline,1.0,1.0,1.0,1.0,1.0
+Single-Level Stacking,1.0,1.0,1.0,1.0,1.0
+Hierarchical Stacking,1.0,1.0,1.0,1.0,1.0

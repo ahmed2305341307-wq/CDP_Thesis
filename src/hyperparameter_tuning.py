@@ -4,7 +4,8 @@ import json
 import joblib
 import pandas as pd
 
-from sklearn.ensemble import RandomForestClassifier, VotingClassifier
+from sklearn.ensemble import RandomForestClassifier
+from stacking_architecture import (build_hierarchical_stacking, build_single_stacking, build_soft_voting)
 from sklearn.svm import SVC
 from sklearn.model_selection import RandomizedSearchCV, StratifiedKFold
 from sklearn.metrics import (
@@ -295,23 +296,24 @@ def main():
     }
 
     # --------------------------------------------------------
-    # CREATE TUNED VOTING ENSEMBLE
+    # CREATE TUNED HIERARCHICAL STACKING
     # --------------------------------------------------------
 
-    voting = VotingClassifier(
-        estimators=[
-            ("rf", rf_search.best_estimator_),
-            ("svm", svm_search.best_estimator_),
-            ("xgb", xgb_search.best_estimator_)
-        ],
-        voting="soft"
+    hierarchical_stacking = build_hierarchical_stacking(
+        rf_search.best_estimator_, svm_search.best_estimator_,
+        xgb_search.best_estimator_, random_state=RANDOM_STATE,
+        n_splits=CV_FOLDS
     )
 
-    print("\nTraining Tuned Voting Ensemble...")
+    base = (rf_search.best_estimator_, svm_search.best_estimator_, xgb_search.best_estimator_)
+    best_models["Tuned Soft Voting Baseline"] = build_soft_voting(*base).fit(X_train, y_train)
+    best_models["Tuned Single-Level Stacking"] = build_single_stacking(
+        *base, random_state=RANDOM_STATE, n_splits=CV_FOLDS
+    ).fit(X_train, y_train)
 
-    voting.fit(X_train, y_train)
-
-    best_models["Tuned Voting Ensemble"] = voting
+    print("\nTraining Tuned Hierarchical Stacking...")
+    hierarchical_stacking.fit(X_train, y_train)
+    best_models["Tuned Hierarchical Stacking"] = hierarchical_stacking
 
     # --------------------------------------------------------
     # EVALUATE ALL MODELS

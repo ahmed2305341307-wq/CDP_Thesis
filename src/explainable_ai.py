@@ -10,6 +10,7 @@ import lime
 import lime.lime_tabular
 import matplotlib.pyplot as plt
 import pandas as pd
+import numpy as np
 
 from pathlib import Path
 
@@ -58,12 +59,15 @@ if X_train.shape[1] != len(feature_names):
 # 3. SELECT MODELS
 # ------------------------------------------------------------
 
-xgb_model = models["Tuned XGBoost"]
-voting_model = models["Tuned Voting Ensemble"]
+stacking_model = models["Tuned Hierarchical Stacking"]
+positive_index = list(stacking_model.classes_).index(1)
+
+def predict_ckd_probability(X):
+    return stacking_model.predict_proba(np.asarray(X))[:, positive_index]
 
 print("\nSelected models:")
-print("1. Tuned XGBoost - SHAP")
-print("2. Tuned Voting Ensemble - LIME")
+print("1. Tuned Hierarchical Stacking - SHAP")
+print("2. Tuned Hierarchical Stacking - LIME")
 
 # ------------------------------------------------------------
 # 4. SHAP EXPLAINABILITY
@@ -73,11 +77,14 @@ print("\n================================================")
 print("SHAP EXPLAINABILITY")
 print("================================================")
 
-print("\nCreating SHAP TreeExplainer...")
+print("\nCreating SHAP PermutationExplainer...")
 
-shap_explainer = shap.TreeExplainer(xgb_model)
-
-shap_values = shap_explainer(X_test)
+background = shap.sample(X_train, 25, random_state=42)
+shap_explainer = shap.Explainer(
+    predict_ckd_probability, background, algorithm="permutation",
+    feature_names=feature_names, seed=42
+)
+shap_values = shap_explainer(X_test, max_evals=5 * (2 * len(feature_names) + 1))
 
 print("SHAP values calculated successfully!")
 
@@ -102,7 +109,7 @@ shap.summary_plot(
     show=False
 )
 
-plt.title("SHAP Summary Plot - Tuned XGBoost")
+plt.title("SHAP Summary Plot - Tuned Hierarchical Stacking")
 plt.tight_layout()
 
 plt.savefig(
@@ -131,7 +138,7 @@ shap.summary_plot(
     show=False
 )
 
-plt.title("SHAP Feature Importance - Tuned XGBoost")
+plt.title("SHAP Feature Importance - Tuned Hierarchical Stacking")
 plt.tight_layout()
 
 plt.savefig(
@@ -233,7 +240,7 @@ sample_index = 0
 
 lime_explanation = lime_explainer.explain_instance(
     data_row=X_test[sample_index],
-    predict_fn=voting_model.predict_proba,
+    predict_fn=stacking_model.predict_proba,
     num_features=15,
     top_labels=2
 )

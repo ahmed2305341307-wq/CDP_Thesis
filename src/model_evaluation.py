@@ -57,14 +57,16 @@ print("Testing shape:", X_test.shape)
 print("Testing samples:", len(y_test))
 
 # ------------------------------------------------------------
-# 3. SELECT FOUR OPTIMIZED MODELS
+# 3. SELECT SIX OPTIMIZED MODELS
 # ------------------------------------------------------------
 
 model_names = [
     "Tuned Random Forest",
     "Tuned SVM",
     "Tuned XGBoost",
-    "Tuned Voting Ensemble"
+    "Tuned Soft Voting Baseline",
+    "Tuned Single-Level Stacking",
+    "Tuned Hierarchical Stacking"
 ]
 
 for name in model_names:
@@ -203,7 +205,7 @@ print(metrics_df.to_string(index=False))
 
 print("\nGenerating Confusion Matrix plots...")
 
-fig, axes = plt.subplots(2, 2, figsize=(12, 10))
+fig, axes = plt.subplots(3, 2, figsize=(12, 15))
 
 for ax, name in zip(axes.ravel(), model_names):
 

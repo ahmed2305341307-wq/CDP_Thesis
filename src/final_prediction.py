@@ -69,10 +69,9 @@ print("\n" + "=" * 50)
 print("FINAL MODEL SELECTION")
 print("=" * 50)
 
-# Phase 6 results showed a tie between these models.
-# Select Voting Ensemble as the proposed ensemble model.
+# Select the proposed hierarchical stacking model; this is not a claim of superiority.
 
-best_model_name = "Tuned Voting Ensemble"
+best_model_name = "Tuned Hierarchical Stacking"
 
 if best_model_name not in models:
     raise KeyError(
